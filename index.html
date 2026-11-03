@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hola, soy [Tu nombre]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Quicksand:wght@400;500;600&family=Cormorant+Garamond:ital,wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="locked">
+
+  <!-- ANIMACIÓN DE ENTRADA: "hola jejeje" (el texto se cambia en data-msg) -->
+  <div id="intro"><p id="introText" data-msg="hola jejeje"></p></div>
+
+  <!-- Definiciones reutilizables (tulipán y corazón) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="tulip" viewBox="0 0 40 90">
+        <path d="M20 88 C20 60 18 45 20 30" stroke="#5c7a4a" stroke-width="3" fill="none"/>
+        <path d="M20 82 C6 76 2 58 6 46 C14 54 19 64 20 82Z" fill="#6f8f58"/>
+        <path d="M20 76 C34 70 38 54 34 44 C27 52 21 60 20 76Z" fill="#7da063"/>
+        <path d="M8 18 C8 6 14 2 20 10 C26 2 32 6 32 18 C32 30 26 34 20 34 C14 34 8 30 8 18Z" fill="currentColor"/>
+        <path d="M20 10 C17 18 17 26 20 34 C23 26 23 18 20 10Z" fill="rgba(0,0,0,.18)"/>
+      </symbol>
+      <clipPath id="heartClip">
+        <path d="M100 170 C20 110 0 70 30 35 C55 8 90 20 100 48 C110 20 145 8 170 35 C200 70 180 110 100 170Z"/>
+      </clipPath>
+    </defs>
+  </svg>
+
+  <!-- CAPAS DE FONDO ANIMADO -->
+  <div id="darkLayer" class="layer" aria-hidden="true"></div>
+  <div id="greenLayer" class="layer" aria-hidden="true"></div>
+  <svg id="vineL" class="vine" aria-hidden="true"></svg>
+  <svg id="vineR" class="vine right" aria-hidden="true"></svg>
+  <svg id="ground" aria-hidden="true"></svg>
+
+  <!-- LIBROS Y COSAS DE MAGIA EN LAS ESQUINAS -->
+  <span class="corner tl" aria-hidden="true">📚</span>
+  <span class="corner tr" aria-hidden="true">📖</span>
+  <span class="corner bl" aria-hidden="true">📕</span>
+  <span class="corner br" aria-hidden="true">🔮</span>
+
+  <!-- GATO NEGRO CON COLITA ANIMADA -->
+  <svg id="cat" viewBox="0 0 200 190" aria-hidden="true">
+    <path class="tail" d="M142 170 C186 170 192 122 168 98"/>
+    <ellipse cx="100" cy="150" rx="46" ry="38" class="fur"/>
+    <ellipse cx="78" cy="184" rx="15" ry="7" class="fur"/>
+    <ellipse cx="122" cy="184" rx="15" ry="7" class="fur"/>
+    <path d="M71 76 L74 42 L98 64Z" class="fur"/>
+    <path d="M129 76 L126 42 L102 64Z" class="fur"/>
+    <path d="M77 66 L78 52 L89 62Z" fill="#3a2630"/>
+    <path d="M123 66 L122 52 L111 62Z" fill="#3a2630"/>
+    <circle cx="100" cy="94" r="33" class="fur"/>
+    <g class="eyes">
+      <ellipse cx="87" cy="91" rx="6.5" ry="7.5" fill="#b7e35a"/>
+      <ellipse cx="113" cy="91" rx="6.5" ry="7.5" fill="#b7e35a"/>
+      <rect x="85.7" y="85" width="2.6" height="12" rx="1.3" fill="#0a0a0a"/>
+      <rect x="111.7" y="85" width="2.6" height="12" rx="1.3" fill="#0a0a0a"/>
+    </g>
+    <path d="M97 102 L103 102 L100 106Z" fill="#e8a0b4"/>
+    <path d="M100 106 Q96 111 92 109 M100 106 Q104 111 108 109" stroke="#555" stroke-width="1.5" fill="none"/>
+    <path d="M72 100 L50 96 M72 105 L50 109 M128 100 L150 96 M128 105 L150 109" stroke="#666" stroke-width="1.3"/>
+  </svg>
+
+  <div id="sombra" aria-hidden="true"></div>
+
+  <!-- ===== MENÚ (8 botones con hover animado) ===== -->
+  <nav id="menu">
+
+    <!-- 1. INICIO: escalera grande + persona al inicio del recorrido -->
+    <a href="#inicio">Inicio
+      <span class="tip tip-escalera" aria-hidden="true">
+        <svg viewBox="0 0 260 190">
+          <rect class="step" style="--i:0" x="20"  y="170" width="28" height="20" fill="#b9c8a4"/>
+          <rect class="step" style="--i:1" x="48"  y="152" width="28" height="38" fill="#a9ba94"/>
+          <rect class="step" style="--i:2" x="76"  y="134" width="28" height="56" fill="#9aad85"/>
+          <rect class="step" style="--i:3" x="104" y="116" width="28" height="74" fill="#8ca076"/>
+          <rect class="step" style="--i:4" x="132" y="98"  width="28" height="92" fill="#7d9268"/>
+          <rect class="step" style="--i:5" x="160" y="80"  width="28" height="110" fill="#6f845b"/>
+          <rect class="step" style="--i:6" x="188" y="62"  width="28" height="128" fill="#617650"/>
+          <rect class="step" style="--i:7" x="216" y="44"  width="28" height="146" fill="#536945"/>
+          <text class="estrella" x="222" y="34" font-size="22" fill="#ffe08a">★</text>
+          <g class="persona">
+            <circle cx="34" cy="132" r="7" fill="#f4d9c6"/>
+            <path d="M27 130 Q34 120 41 130 Q34 126 27 130Z" fill="#6b4429"/>
+            <rect x="28" y="140" width="12" height="17" rx="4" fill="#ffffff"/>
+            <path d="M31 157 L30 170 M37 157 L38 170" stroke="#f6c9d6" stroke-width="3" stroke-linecap="round"/>
+            <path d="M28 144 L22 153" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+            <path class="brazo" d="M40 144 L48 134" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </span>
+    </a>
+
+    <!-- 2. SOBRE MÍ: chica colgando boca abajo, pelo marrón largo, adormilada, poleron blanco -->
+    <a href="#sobre-mi">Sobre mí
+      <span class="tip tip-chica" aria-hidden="true">
+        <svg viewBox="0 0 160 215">
+          <g class="cuelga">
+            <!-- piernas (arriba, colgando de la barra) -->
+            <rect x="64" y="0" width="13" height="64" rx="6" fill="#4a4a5e"/>
+            <rect x="83" y="0" width="13" height="64" rx="6" fill="#4a4a5e"/>
+            <ellipse cx="70" cy="3" rx="9" ry="5" fill="#f1f1f1"/>
+            <ellipse cx="90" cy="3" rx="9" ry="5" fill="#f1f1f1"/>
+            <!-- pelo largo detrás -->
+            <path class="pelo" d="M58 140 C50 172 54 196 64 208 C72 200 76 206 80 211 C86 203 90 208 97 206 C110 196 112 170 102 140Z" fill="#6b4429"/>
+            <path class="pelo" d="M66 150 C62 175 64 192 70 202 M80 152 C80 176 80 194 80 205 M94 150 C98 175 96 192 90 202" stroke="#8a5a36" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- brazos colgando -->
+            <g class="brazoL"><rect x="40" y="66" width="14" height="56" rx="7" fill="#ffffff" stroke="#dcdcdc"/><circle cx="47" cy="128" r="6" fill="#fbe3d6"/></g>
+            <g class="brazoR"><rect x="106" y="66" width="14" height="56" rx="7" fill="#ffffff" stroke="#dcdcdc"/><circle cx="113" cy="128" r="6" fill="#fbe3d6"/></g>
+            <!-- poleron blanco -->
+            <path d="M56 62 L104 62 Q110 92 100 122 L60 122 Q50 92 56 62Z" fill="#ffffff" stroke="#dcdcdc"/>
+            <path d="M80 122 L80 100 M74 122 L73 106 M86 122 L87 106" stroke="#cfcfcf" stroke-width="2" stroke-linecap="round"/>
+            <path d="M58 120 Q80 134 102 120 L100 126 Q80 138 60 126Z" fill="#f2f2f2" stroke="#dcdcdc"/>
+            <!-- cabeza (piel clarita) -->
+            <circle cx="80" cy="146" r="21" fill="#fbe3d6"/>
+            <!-- cara adormilada (dibujada al derecho y girada) -->
+            <g transform="rotate(180 80 146)">
+              <path d="M70 142 Q75 147 80 142" stroke="#5a3a2a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+              <path d="M82 142 Q87 147 92 142" stroke="#5a3a2a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+              <path d="M68 136 Q74 133 79 136 M83 136 Q89 133 95 136" stroke="#7a5236" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <circle cx="69" cy="152" r="4" fill="#f5b5b5" opacity=".6"/>
+              <circle cx="95" cy="152" r="4" fill="#f5b5b5" opacity=".6"/>
+              <path d="M77 156 Q81 158 85 156" stroke="#b5655f" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <!-- flequillo -->
+              <path d="M60 140 Q64 122 82 124 Q100 122 102 140 Q92 130 82 134 Q70 130 60 140Z" fill="#6b4429"/>
+            </g>
+            <!-- zzz -->
+            <text class="zmini" x="112" y="176" font-size="14" fill="#cdb8ff">z</text>
+            <text class="zmini" style="animation-delay:.7s" x="122" y="164" font-size="18" fill="#cdb8ff">Z</text>
+          </g>
+        </svg>
+      </span>
+    </a>
+
+    <!-- 3. GUSTOS: caen libros -->
+    <a href="#gustos">Gustos
+      <span class="tip tip-libros" aria-hidden="true">
+        <i style="--l:22px;--dl:0s;--y:132px;--rot:-12deg">📚</i>
+        <i style="--l:92px;--dl:.18s;--y:138px;--rot:8deg">📖</i>
+        <i style="--l:152px;--dl:.36s;--y:130px;--rot:-6deg">📕</i>
+        <i style="--l:56px;--dl:.54s;--y:96px;--rot:14deg">📗</i>
+        <i style="--l:122px;--dl:.72s;--y:98px;--rot:-10deg">📘</i>
+        <i style="--l:88px;--dl:.9s;--y:60px;--rot:5deg">📙</i>
+      </span>
+    </a>
+
+    <!-- 4. HISTORIA: zzz (porque es aburrido) -->
+    <a href="#historia">Historia
+      <span class="tip tip-zzz" aria-hidden="true">
+        <i style="--s:5.5rem;--dl:0s;--x:20px">Z</i>
+        <i style="--s:3.8rem;--dl:.9s;--x:80px">z</i>
+        <i style="--s:2.6rem;--dl:1.8s;--x:128px">z</i>
+      </span>
+    </a>
+
+    <!-- 5. HABILIDADES: "ninguna jejeje" -->
+    <a href="#habilidades">Habilidades
+      <span class="tip tip-nada" aria-hidden="true">
+        <span class="bubble">ninguna jejeje</span>
+        <span class="shrug">🤷</span>
+      </span>
+    </a>
+
+    <!-- 6. SUEÑOS: mansión súper linda -->
+    <a href="#suenos">Sueños
+      <span class="tip tip-mansion" aria-hidden="true">
+        <svg viewBox="0 0 260 190">
+          <circle cx="226" cy="28" r="14" fill="#fff3c4"/>
+          <circle cx="232" cy="24" r="12" fill="#2b2140" opacity=".35"/>
+          <g fill="#fff3c4">
+            <circle class="twk" cx="30" cy="20" r="2"/><circle class="twk" style="animation-delay:.6s" cx="70" cy="34" r="1.6"/>
+            <circle class="twk" style="animation-delay:1.1s" cx="190" cy="16" r="2"/><circle class="twk" style="animation-delay:1.6s" cx="160" cy="40" r="1.4"/>
+          </g>
+          <ellipse cx="130" cy="182" rx="126" ry="10" fill="#4f6b3f" opacity=".85"/>
+          <!-- torre -->
+          <rect x="108" y="28" width="44" height="42" fill="#f6f0e2"/>
+          <polygon points="102,28 130,4 158,28" fill="#7b5c96"/>
+          <rect class="win" style="--d:.3s" x="122" y="38" width="16" height="22" rx="8" fill="#ffd978"/>
+          <!-- alas -->
+          <rect x="18" y="112" width="64" height="62" fill="#efe7d6"/>
+          <polygon points="12,112 50,84 88,112" fill="#6a4f82"/>
+          <rect x="178" y="112" width="64" height="62" fill="#efe7d6"/>
+          <polygon points="172,112 210,84 248,112" fill="#6a4f82"/>
+          <rect class="win" style="--d:.8s" x="30" y="126" width="14" height="20" rx="7" fill="#ffd978"/>
+          <rect class="win" style="--d:1.4s" x="56" y="126" width="14" height="20" rx="7" fill="#ffd978"/>
+          <rect class="win" style="--d:.2s" x="190" y="126" width="14" height="20" rx="7" fill="#ffd978"/>
+          <rect class="win" style="--d:1.1s" x="216" y="126" width="14" height="20" rx="7" fill="#ffd978"/>
+          <!-- cuerpo central -->
+          <rect x="84" y="88" width="92" height="86" fill="#f6f0e2"/>
+          <polygon points="76,88 130,50 184,88" fill="#7b5c96"/>
+          <rect x="158" y="50" width="10" height="24" fill="#d8cdb6"/>
+          <rect class="win" style="--d:.5s" x="96"  y="98" width="14" height="20" rx="7" fill="#ffd978"/>
+          <rect class="win" style="--d:1.2s" x="150" y="98" width="14" height="20" rx="7" fill="#ffd978"/>
+          <g fill="#ffffff"><rect x="90" y="120" width="5" height="54"/><rect x="104" y="120" width="5" height="54"/><rect x="151" y="120" width="5" height="54"/><rect x="165" y="120" width="5" height="54"/></g>
+          <path d="M118 174 V148 Q130 132 142 148 V174Z" fill="#4a3040"/>
+          <circle cx="137" cy="160" r="1.6" fill="#ffd978"/>
+          <rect x="102" y="174" width="56" height="6" fill="#d9cfb8"/>
+          <!-- jardín -->
+          <ellipse cx="8" cy="150" rx="16" ry="28" fill="#3f5a35"/>
+          <ellipse cx="252" cy="150" rx="16" ry="28" fill="#3f5a35"/>
+          <g fill="#e8a0b4"><circle cx="40" cy="178" r="3"/><circle cx="56" cy="180" r="3"/><circle cx="204" cy="178" r="3" fill="#f2c14e"/><circle cx="222" cy="180" r="3"/></g>
+        </svg>
+      </span>
+    </a>
+
+    <!-- 7. ENTORNO: corazón lleno de personas -->
+    <a href="#entorno">Entorno
+      <span class="tip tip-corazon" aria-hidden="true">
+        <svg viewBox="0 0 200 180">
+          <g class="latido">
+            <path d="M100 170 C20 110 0 70 30 35 C55 8 90 20 100 48 C110 20 145 8 170 35 C200 70 180 110 100 170Z" fill="#c2415d"/>
+            <g id="gentio" clip-path="url(#heartClip)"></g>
+            <path d="M100 170 C20 110 0 70 30 35 C55 8 90 20 100 48 C110 20 145 8 170 35 C200 70 180 110 100 170Z" fill="none" stroke="#ff9db1" stroke-width="3"/>
+          </g>
+        </svg>
+      </span>
+    </a>
+
+    <!-- 8. TOP SECRET: al pasar el cursor aparece la ilustración del acertijo; el clic baja a la caja fuerte -->
+    <a href="#boveda" id="btnArchive" class="nav-secreto">TOP SECRET</a>
+  </nav>
+
+  <main>
+    <!-- ===== INICIO (botón "ver más" 1/8) ===== -->
+    <section id="inicio" class="hero">
+      <img class="photo" src="foto.jpg" alt="Dharma con la cara pintada de Minion">
+      <h1>Dharma</h1>
+      <p class="tagline">Holi, soy Dharma. Me gusta mucho leer y simplemente vivir mi vida sin complicaciones. Me importa lo que digan de mí, pero al mismo tiempo no; así que solo me gusta ser yo misma.</p>
+      <button class="ver-mas" type="button" aria-expanded="false" aria-controls="mas-inicio">ver más</button>
+      <div class="more hero-more" id="mas-inicio"><div class="more-in">
+        <p class="rotulo">Una frase que me describe</p>
+        <blockquote class="cita">
+          <p>«A veces, pensó, dentro de aquella casa en medio de un mar cerúleo, podías elegir la vida que querías vivir. Y, si eras una persona con suerte, a veces esa vida te elegía a ti.»</p>
+          <footer>TJ Klune, <cite>En algún lugar del mar más azul</cite></footer>
+        </blockquote>
+      </div></div>
+      <p class="scroll-hint">baja despacito, esto cambia</p>
+    </section>
+
+    <!-- ===== SOBRE MÍ (2/8) ===== -->
+    <section id="sobre-mi" class="block">
+      <article class="card left" data-tema="sobre-mi">
+        <h2>Sobre mí</h2>
+        <div class="brief dialogo">
+          <p>«—Del uno al diez, ¿qué tan psicópata suena decir que estoy en tu casa?</p>
+          <p>—Un diez, en definitiva, ¿por qué?</p>
+          <p>—Porque estoy en tu casa.»</p>
+        </div>
+        <button class="ver-mas" type="button" aria-expanded="false" aria-controls="mas-sobre-mi">ver más</button>
+        <div class="more" id="mas-sobre-mi"><div class="more-in">
+          <h3>Quién soy</h3>
+          <p>Hi de nuevo, soy Dharma. Por ahora solo estudio y paso tiempo con mis amigas, como todo el mundo.</p>
+          <p>Si tuviera que describirme con una palabra, sería «67», porque la verdad no creo poder describirme a mí misma: solo soy yo. Aun así, siento que lo que más me caracteriza es ser alguien muy cambiante y espontánea. A veces estoy feliz y otras veces triste, pero siempre me gusta reírme, hacer reír a la gente y, por supuesto, molestarla un poquito.</p>
+          <p>Me gusta mantener bien mis estudios, y es algo de lo que me siento orgullosa. También valoro mucho el valor espiritual que pueden tener los objetos, lo que significan para uno. Y tengo una postura marcada por la exclusividad: en mi vida solo una persona puede ocupar un título importante e irremplazable.</p>
+          <p>Ah, y soy dramática, jejeje. Muy dramática: puedo convertir un lunes cualquiera en una telenovela de tres temporadas, con final trágico incluido.</p>
+        </div></div>
+      </article>
+    </section>
+
+    <!-- ===== GUSTOS (3/8) ===== -->
+    <section id="gustos" class="block">
+      <article class="card right ancho" data-tema="gustos">
+        <h2>Mis gustos e intereses</h2>
+        <p class="brief">Libros y Milo J.</p>
+        <button class="ver-mas" type="button" aria-expanded="false" aria-controls="mas-gustos">ver más</button>
+        <div class="more" id="mas-gustos"><div class="more-in">
+
+          <!-- MÚSICA -->
+          <div class="gusto">
+            <h3>Música</h3>
+            <p>Mi cantante favorito es Milo J. Lo amo y considero que su música es hermosa; me gusta escucharla todo el día. Aprecio mucho cómo, en su último año, hizo que tanta gente esperara con ganas su música.</p>
+            <p class="bio">Milo J es argentino, tiene <span id="edadMilo">20</span> años y cumple el 25 de octubre. Desde los 13 ya se notaba que era un gran cantante. ¡Lo amooo!</p>
+            <div class="reproductor" id="reproductor">
+              <button class="play" id="btnPlay" type="button" aria-pressed="false" aria-label="Reproducir la canción de Milo J">▶</button>
+              <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+              <span class="pista">Milo J, canción 2</span>
+              <audio id="audioMilo" src="cancion2.mp3" preload="none"></audio>
+            </div>
+            <p class="aviso" id="avisoAudio" hidden>No encuentro «cancion2.mp3» en la carpeta del proyecto.</p>
+          </div>
+
+          <!-- PELÍCULAS -->
+          <div class="gusto">
+            <h3>Películas</h3>
+            <p>La verdad es que no disfruto para nada ver películas, series ni YouTube: me aburren. Pero Piratas del Caribe es clave, es mi película favorita.</p>
+            <button class="btn-jack" id="btnJack" type="button">🏴‍☠️ Piratas del Caribe</button>
+          </div>
+
+          <!-- VIDEOJUEGOS -->
+          <div class="gusto">
+            <h3>Videojuegos</h3>
+            <div class="abandonado">
+              <svg viewBox="0 0 300 130" aria-hidden="true">
+                <g class="tela" stroke="rgba(255,255,255,.55)" fill="none" stroke-width="1">
+                  <path d="M0 0 L100 0 M0 0 L90 36 M0 0 L62 70 M0 0 L30 100 M0 0 L0 110"/>
+                  <path d="M30 0 Q24 24 0 30 M55 0 Q42 40 0 55 M80 0 Q60 62 0 80 M100 0 Q74 80 0 105"/>
+                </g>
+                <g class="tela" stroke="rgba(255,255,255,.55)" fill="none" stroke-width="1" transform="translate(300 0) scale(-1 1)">
+                  <path d="M0 0 L100 0 M0 0 L90 36 M0 0 L62 70 M0 0 L30 100 M0 0 L0 110"/>
+                  <path d="M30 0 Q24 24 0 30 M55 0 Q42 40 0 55 M80 0 Q60 62 0 80 M100 0 Q74 80 0 105"/>
+                </g>
+                <!-- araña grande -->
+                <g class="arana" style="transform-origin:200px 0">
+                  <line x1="200" y1="0" x2="200" y2="58" stroke="rgba(255,255,255,.6)"/>
+                  <g stroke="#1a1a1a" stroke-width="1.6" fill="none" stroke-linecap="round">
+                    <path d="M200 66 L188 58 L182 64 M200 66 L186 66 L180 74 M200 68 L188 76 L184 84 M200 70 L192 80 L190 88"/>
+                    <path d="M200 66 L212 58 L218 64 M200 66 L214 66 L220 74 M200 68 L212 76 L216 84 M200 70 L208 80 L210 88"/>
+                  </g>
+                  <ellipse cx="200" cy="70" rx="8" ry="10" fill="#1a1a1a"/>
+                  <circle cx="200" cy="60" r="5" fill="#1a1a1a"/>
+                  <circle cx="198" cy="59" r="1.2" fill="#ff5c5c"/><circle cx="202" cy="59" r="1.2" fill="#ff5c5c"/>
+                </g>
+                <!-- araña chiquita -->
+                <g class="arana chica" style="transform-origin:90px 0">
+                  <line x1="90" y1="0" x2="90" y2="30" stroke="rgba(255,255,255,.6)"/>
+                  <g stroke="#1a1a1a" stroke-width="1.2" fill="none" stroke-linecap="round">
+                    <path d="M90 35 L82 30 L78 35 M90 36 L80 38 L76 44 M90 37 L82 44 L80 50"/>
+                    <path d="M90 35 L98 30 L102 35 M90 36 L100 38 L104 44 M90 37 L98 44 L100 50"/>
+                  </g>
+                  <ellipse cx="90" cy="38" rx="5" ry="6" fill="#1a1a1a"/>
+                  <circle cx="90" cy="32" r="3" fill="#1a1a1a"/>
+                </g>
+              </svg>
+              <p class="vacio-txt">Sección abandonada: no juego videojuegos.</p>
+              <span class="mando" aria-hidden="true">🎮</span>
+            </div>
+          </div>
+
+          <!-- COMIDA -->
+          <div class="gusto">
+            <h3>Comida</h3>
+            <p>Amo el chaufa, de verdad. También amo el pollo a la brasa. Y las gaseosas… soy adicta a ellas, no puedo estar un día sin tomar una, ¡las amooo! De dulce, mis favoritos son los chocolates y los chifles.</p>
+            <div class="comidas">
+
+              <figure class="ico-comida chaufa">
+                <svg viewBox="0 0 80 80" aria-hidden="true">
+                  <g class="vapor" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2.4" stroke-linecap="round">
+                    <path d="M28 26 Q24 20 28 14 Q32 8 28 3"/><path d="M40 24 Q36 18 40 12 Q44 6 40 1" style="animation-delay:.5s"/><path d="M52 26 Q48 20 52 14 Q56 8 52 3" style="animation-delay:1s"/>
+                  </g>
+                  <path d="M10 42 Q40 80 70 42Z" fill="#c0463a"/>
+                  <path d="M10 42 Q40 80 70 42" fill="none" stroke="#e8786a" stroke-width="2"/>
+                  <ellipse cx="40" cy="41" rx="31" ry="11" fill="#f3d27a"/>
+                  <g>
+                    <rect x="22" y="36" width="6" height="4" rx="1.5" fill="#fff2b8" transform="rotate(-20 25 38)"/>
+                    <rect x="46" y="34" width="7" height="4" rx="1.5" fill="#fff2b8" transform="rotate(15 49 36)"/>
+                    <rect x="34" y="40" width="5" height="4" rx="1.5" fill="#8a4b2a"/>
+                    <rect x="52" y="42" width="5" height="4" rx="1.5" fill="#8a4b2a"/>
+                    <circle cx="30" cy="43" r="2.2" fill="#e88b3a"/><circle cx="44" cy="44" r="2.2" fill="#e88b3a"/>
+                    <rect x="26" y="32" width="8" height="2.6" rx="1.3" fill="#6fa04c" transform="rotate(25 30 33)"/>
+                    <rect x="40" y="31" width="8" height="2.6" rx="1.3" fill="#6fa04c" transform="rotate(-20 44 32)"/>
+                    <rect x="55" y="37" width="7" height="2.6" rx="1.3" fill="#6fa04c" transform="rotate(30 58 38)"/>
+                  </g>
+                </svg>
+                <figcaption>Chaufa</figcaption>
+              </figure>
+
+              <figure class="ico-comida pollo">
+                <svg viewBox="0 0 80 80" aria-hidden="true">
+                  <g class="giro">
+                    <ellipse cx="40" cy="40" rx="27" ry="20" fill="#d98a32"/>
+                    <ellipse cx="38" cy="35" rx="19" ry="11" fill="#eaa94a"/>
+                    <path d="M18 54 Q10 66 18 70 Q24 68 26 58Z" fill="#c9772b"/><circle cx="15" cy="70" r="3.4" fill="#fff4e0"/>
+                    <path d="M62 54 Q70 66 62 70 Q56 68 54 58Z" fill="#c9772b"/><circle cx="65" cy="70" r="3.4" fill="#fff4e0"/>
+                    <ellipse cx="22" cy="38" rx="8" ry="5" fill="#c9772b" transform="rotate(-25 22 38)"/>
+                    <g fill="#a85f1c"><circle cx="34" cy="32" r="1.6"/><circle cx="46" cy="36" r="1.6"/><circle cx="40" cy="46" r="1.6"/><circle cx="52" cy="30" r="1.4"/></g>
+                    <path d="M28 28 Q36 24 44 27" stroke="#ffd58a" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  </g>
+                </svg>
+                <figcaption>Pollo a la brasa</figcaption>
+              </figure>
+
+              <figure class="ico-comida gaseosa">
+                <svg viewBox="0 0 80 80" aria-hidden="true">
+                  <path d="M42 24 L48 8 L60 8" stroke="#f4efe6" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M22 24 L58 24 L53 74 L27 74Z" fill="#c0392b"/>
+                  <path d="M24 42 L56 42 L55 56 L25 56Z" fill="#f4efe6"/>
+                  <ellipse cx="40" cy="24" rx="19" ry="4.5" fill="#f4efe6"/>
+                  <ellipse cx="40" cy="24" rx="14" ry="2.6" fill="#8a1f16"/>
+                  <g class="burbujas" fill="rgba(255,255,255,.85)">
+                    <circle cx="34" cy="20" r="2.4"/><circle cx="43" cy="18" r="2" style="animation-delay:.4s"/><circle cx="50" cy="21" r="2.6" style="animation-delay:.8s"/><circle cx="39" cy="22" r="1.6" style="animation-delay:1.2s"/>
+                  </g>
+                </svg>
+                <figcaption>Gaseosas</figcaption>
+              </figure>
+
+              <figure class="ico-comida chocolate">
+                <svg viewBox="0 0 80 80" aria-hidden="true">
+                  <g transform="rotate(-12 40 40)">
+                    <rect x="18" y="10" width="44" height="58" rx="5" fill="#5a3420"/>
+                    <g stroke="#3e2314" stroke-width="2"><path d="M33 10 V68 M48 10 V68 M18 29 H62 M18 48 H62"/></g>
+                    <rect x="21" y="13" width="9" height="13" rx="2" fill="#7a4a2e" opacity=".7"/>
+                    <path d="M16 56 L64 56 L62 72 L18 72Z" fill="#c9c9d6"/>
+                    <path d="M16 56 L24 62 L32 56 L40 62 L48 56 L56 62 L64 56" fill="none" stroke="#a9a9ba" stroke-width="1.5"/>
+                  </g>
+                </svg>
+                <figcaption>Chocolates</figcaption>
+              </figure>
+
+              <figure class="ico-comida chifles">
+                <svg viewBox="0 0 80 80" aria-hidden="true">
+                  <g fill="#f0c24a" stroke="#c9962a" stroke-width="1.6">
+                    <ellipse class="chifle" cx="24" cy="52" rx="14" ry="8" transform="rotate(-15 24 52)"/>
+                    <ellipse class="chifle" style="animation-delay:.3s" cx="50" cy="54" rx="14" ry="8" transform="rotate(12 50 54)"/>
+                    <ellipse class="chifle" style="animation-delay:.6s" cx="36" cy="38" rx="14" ry="8" transform="rotate(-5 36 38)"/>
+                    <ellipse class="chifle" style="animation-delay:.9s" cx="58" cy="34" rx="12" ry="7" transform="rotate(25 58 34)"/>
+                    <ellipse class="chifle" style="animation-delay:1.2s" cx="20" cy="30" rx="12" ry="7" transform="rotate(-30 20 30)"/>
+                  </g>
+                  <g fill="#c9962a"><circle cx="30" cy="36" r="1.2"/><circle cx="40" cy="40" r="1.2"/><circle cx="22" cy="54" r="1.2"/><circle cx="52" cy="56" r="1.2"/><circle cx="56" cy="36" r="1.2"/><circle cx="18" cy="30" r="1.2"/></g>
+                </svg>
+                <figcaption>Chifles</figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <!-- PASATIEMPOS -->
+          <div class="gusto">
+            <h3>Pasatiempos</h3>
+            <p>Amo leer en serio, lo amo con toda mi vida. También me gusta investigar historias.</p>
+            <p class="subtit">Mis libros favoritos</p>
+            <div class="libros">
+              <figure class="portada">
+                <img src="libro1.jpg" alt="Portada de Una Perfecta Confusión" onerror="this.style.display='none'">
+                <figcaption>Una Perfecta Confusión</figcaption>
+              </figure>
+              <figure class="portada">
+                <img src="libro2.jpg" alt="Portada de En algún lugar del mar más azul" onerror="this.style.display='none'">
+                <figcaption>En algún lugar del mar más azul</figcaption>
+              </figure>
+              <figure class="portada">
+                <img src="libro3.jpg" alt="Portada de Bajo la puerta de los susurros" onerror="this.style.display='none'">
+                <figcaption>Bajo la puerta de los susurros</figcaption>
+              </figure>
+            </div>
+            <p class="ps">PD: me demoro como seis meses en terminar un solo libro (procrastinación y escuela, perdón).</p>
+          </div>
+
+        </div></div>
+      </article>
+    </section>
+
+    <!-- ===== HISTORIA (4/8) ===== -->
+    <section id="historia" class="block">
+      <article class="card left" data-tema="historia">
+        <h2>Mi historia</h2>
+        <p class="brief">Haber sobrevivido hasta ahora.</p>
+        <button class="ver-mas" type="button" aria-expanded="false" aria-controls="mas-historia">ver más</button>
+        <div class="more" id="mas-historia"><div class="more-in">
+          <p>No tengo una historia interesante y no sabría contarla, porque es muy X. Pero cuenta que desde pequeña me educaron para ser independiente y nunca depender de mis padres, y es algo que cumplo hasta hoy.</p>
+          <p>Mis padres no saben nada de mis estudios ni de mis tareas, ni siquiera a dónde salgo; y cuando lo saben es porque soy rebelde y así. Desde siempre he sido muy independiente, y todo lo hago yo.</p>
+          <p>La única experiencia que de verdad amo es cuando conocí a mi mejor amiga, Boggio, el año pasado, en una salida en la que una amiga se escapó con su novio. Eso cambió mi vida para siempre, porque me hizo conocer a mi alma gemela en amistad. La amo un montón y siempre agradeceré que esté ahí.</p>
+        </div></div>
+      </article>
+    </section>
+
+    <!-- ===== HABILIDADES (5/8) ===== -->
+    <section id="habilidades" class="block">
+      <article class="card right" data-tema="habilidades">
+        <h2>Mis habilidades</h2>
+        <p class="brief nada">NADAAAA</p>
+        <button class="ver-mas" type="button" aria-expanded="false" aria-controls="mas-habilidades">ver más</button>
+        <div class="more" id="mas-habilidades"><div class="more-in">
+          <div class="hab"><span class="ico">💭</span><div><h3>Imaginación</h3><p>Supongo que tengo una imaginación moderada, pero nunca me sé explicar y así.</p><div class="medidor"><i style="--w:50%"></i></div></div></div>
+          <div class="hab"><span class="ico">🎤</span><div><h3>Exposiciones</h3><p>Me gusta hacer exposiciones y es algo en lo que me va bien en las calificaciones, pero no siento que sea lo suficientemente buena en eso.</p><div class="medidor"><i style="--w:70%"></i></div></div></div>
+          <div class="hab"><span class="ico">🍳</span><div><h3>Cocinar y limpiar</h3><p>La verdad no sé, pero supongo que sé cocinar y limpiar mi casa, porque soy organizada.</p><div class="medidor"><i style="--w:55%"></i></div></div></div>
+        </div></div>
+      </article>
+    </section>
+
+    <!-- ===== SUEÑOS (6/8) ===== -->
+    <section id="suenos" class="block">
+      <article class="card left ancho" data-tema="suenos">
+        <h2>Mis sueños y metas
+          <svg class="mazo" viewBox="0 0 60 60" aria-hidden="true">
+            <rect x="8" y="48" width="36" height="8" rx="2" fill="#8a5a33"/>
+            <g class="mazo-g"><rect x="22" y="14" width="6" height="34" rx="3" fill="#c58b4e"/><rect x="10" y="8" width="30" height="13" rx="3" fill="#e0b84a"/></g>
+            <g class="choque" stroke="#fff3c4" stroke-width="2" stroke-linecap="round"><path d="M4 44 L10 46 M46 44 L52 42 M26 38 L26 34"/></g>
+          </svg>
+          <span class="balanza" aria-hidden="true">⚖️</span>
+        </h2>
+        <p class="brief">Vivir sola.</p>
+        <button class="ver-mas" type="button" aria-expanded="false" aria-controls="mas-suenos">ver más</button>
+        <div class="more" id="mas-suenos"><div class="more-in">
+          <div class="escena"><div class="copos"></div>
+            <svg viewBox="0 0 300 150" aria-hidden="true">
+              <rect width="300" height="150" rx="14" fill="#1b2440"/>
+              <circle cx="262" cy="30" r="13" fill="#fff3c4"/>
+              <g fill="#fff"><circle class="twk" cx="30" cy="20" r="1.6"/><circle class="twk" style="animation-delay:.7s" cx="90" cy="34" r="1.4"/><circle class="twk" style="animation-delay:1.3s" cx="210" cy="18" r="1.6"/></g>
+              <path d="M0 122 Q80 106 150 119 T300 112 V150 H0Z" fill="#eef2f7"/>
+              <polygon points="40,52 22,100 58,100" fill="#2f4a3a"/><polygon points="40,70 18,116 62,116" fill="#386049"/>
+              <polygon points="252,58 236,102 268,102" fill="#2f4a3a"/><polygon points="252,76 230,118 274,118" fill="#386049"/>
+              <rect x="170" y="58" width="11" height="26" fill="#6b4a3a"/>
+              <g fill="rgba(255,255,255,.7)"><circle class="humo" cx="175" cy="54" r="4"/><circle class="humo" style="animation-delay:.8s" cx="177" cy="54" r="3"/><circle class="humo" style="animation-delay:1.6s" cx="174" cy="54" r="3.5"/></g>
+              <rect x="108" y="86" width="84" height="40" fill="#7a4a2a"/>
+              <polygon points="98,90 150,54 202,90" fill="#3b2a22"/><polygon points="98,90 150,54 202,90 196,90 150,60 104,90" fill="#fff"/>
+              <rect x="144" y="100" width="14" height="26" rx="2" fill="#4a2c18"/>
+              <rect class="win" x="118" y="96" width="16" height="14" rx="2" fill="#ffd978"/><rect class="win" style="--d:1s" x="168" y="96" width="16" height="14" rx="2" fill="#ffd978"/>
+              <g fill="#0a0a0a"><ellipse cx="92" cy="124" rx="11" ry="6"/><circle cx="82" cy="117" r="5.5"/><polygon points="78,114 79,107 83,112"/><polygon points="85,112 88,107 88,114"/><path class="cola-mini" d="M102 124 Q116 118 112 108" stroke="#0a0a0a" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+            </svg>
+          </div>
+          <ul class="metas">
+            <li><b>🏠</b> A corto plazo, vivir sola.</li>
+            <li><b>🎓</b> Graduarme con honores y ganar mucho dinero, obviamente.</li>
+            <li><b>⚖️</b> Ser abogada y llegar a ser jueza. Siempre ha sido mi sueño, desde que vi Caso Cerrado.</li>
+            <li><b>🌍</b> Mudarme a Europa y formar una vida linda y tranquila, sí o sí en un lugar frío.</li>
+            <li><b>🛖</b> Una casita tipo cabaña, súper acogedora, con muchos amigos, una pareja y un gato.</li>
+            <li><b>👯</b> Si fuera posible, vivir en algún momento con una de mis amigas… y después botarla y vivir yo sola, como siempre he querido.</li>
+            <li><b>📚</b> Súper importante: un cuarto solo dedicado a mis libros y decoraciones, tan yo que me enamore de mi cuarto, ejeje.</li>
+          </ul>
+        </div></div>
+      </article>
+    </section>
+
+    <!-- ===== ENTORNO (7/8) ===== -->
+    <section id="entorno" class="block">
+      <article class="card right ancho" data-tema="entorno">
+        <h2>Mi entorno</h2>
+        <p class="brief">Mis amigas y familia.</p>
+        <button class="ver-mas" type="button" aria-expanded="false" aria-controls="mas-entorno">ver más</button>
+        <div class="more" id="mas-entorno"><div class="more-in">
+          <div class="personas">
+            <div class="pers"><span class="av">⭐</span><h3>Benjamín</h3><p>Para mí mi hermano mayor es muy especial. Lo quiero y lo admiro un montón: es un gran modelo a seguir y, de verdad, lo envidio por ser tan inteligente. Es lo mejor en todo.</p></div>
+            <div class="pers"><span class="av">🍼</span><h3>Evans</h3><p>Mi hermano menor. Lo quiero un montón, aunque nunca lo demuestre. De pequeños no teníamos buena relación, pero ahora es mi pequeño bebé y lo aprecio con toda el alma, aunque de verdad no se note.</p></div>
+            <div class="pers"><span class="av">🏡</span><h3>Mis papás</h3><p>Tengo una buena relación con ellos y los amo. Eso no quita que nos peleemos cada dos por tres, en especial con mi mamá: chocamos demasiado y siempre terminamos gritándonos, pero X.</p></div>
+          </div>
+          <p class="amigas-intro">Fuera de lo familiar, diría que mi familia más cercana son mis amigas. Somos como 8 en el grupo y las quiero a todas un montón, pero mis besties son Anny y Boggio.</p>
+          <div class="personas">
+            <div class="pers best"><span class="av">💖</span><h3>Anny</h3><p>La conozco hace mil años, desde los 3. Ha sido mi hermana, mi compañera y mi mejor amiga. Es una persona increíble y estar con ella es muy divertido. La quiero demasiado. De ahí viene la best.</p></div>
+            <div class="pers best"><span class="av">🦋</span><h3>Boggio</h3><p>Es increíble cómo pude acercarme tanto a ella en tan poco tiempo. Es lindo verla sanar después de lo feo de sus amistades anteriores. Aprendí mucho de ella y siempre me motiva a ser mejor.</p></div>
+          </div>
+        </div></div>
+      </article>
+    </section>
+
+    <!-- ===== DATO CURIOSO (8/8) ===== -->
+    <section id="curioso" class="block last">
+      <article class="card left" data-tema="curioso">
+        <h2>Top Secret</h2>
+        <p class="brief"><span class="sello">CLASIFICADO</span></p>
+        <button class="ver-mas" type="button" aria-expanded="false" aria-controls="mas-curioso">ver más</button>
+        <div class="more" id="mas-curioso"><div class="more-in"><p>Este dato no se cuenta así nomás. Está guardado en un archivo clasificado. Pasa el cursor por TOP SECRET, en la barra de arriba, y descifra el código.</p></div></div>
+      </article>
+    </section>
+
+    <!-- ===== CAJA FUERTE (final absoluto de la página) ===== -->
+    <section id="boveda" class="boveda" aria-label="Archivo restringido">
+      <div class="caja" id="caja">
+        <p class="estado" id="estado" role="status" aria-live="polite">RESTRICTED ACCESS</p>
+        <div class="casillas" id="casillas" aria-label="Código de seis cifras"><span class="casilla"></span><span class="casilla"></span><span class="casilla"></span><span class="casilla"></span><span class="casilla"></span><span class="casilla"></span></div>
+        <div class="teclado" id="teclado">
+          <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+          <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+          <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+          <button type="button" data-k="del" aria-label="Borrar la última cifra">⌫</button><button type="button" data-k="0">0</button><button type="button" data-k="clr" aria-label="Borrar todo">C</button>
+        </div>
+        <button class="sonido" id="sonido" type="button" aria-pressed="false">SOUND: OFF</button>
+      </div>
+
+      <!-- SECCIÓN PRIVADA: oculta hasta validar el código -->
+      <div class="privado" id="privado" hidden>
+        <h2>THE THINGS WE NEVER SAID</h2>
+        <div class="escritos" id="escritos">
+          <!-- AQUÍ VAN TUS ESCRITOS. Para cada uno, copia este bloque y pega tu texto:
+               <article class="escrito"><time>fecha (opcional)</time><p>Tu texto aquí.</p></article> -->
+          <article class="escrito"><p class="espera">Aquí irán tus escritos.</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- JACK SPARROW CORRIENDO (aparece al presionar el botón de Piratas del Caribe) -->
+  <div id="jack" hidden aria-hidden="true">
+    <svg viewBox="0 0 120 160">
+      <g class="cuerpo-jack">
+        <g class="pierna pL"><rect x="46" y="102" width="12" height="34" rx="5" fill="#2f2a2a"/><rect x="43" y="134" width="19" height="10" rx="3" fill="#3a2616"/></g>
+        <g class="pierna pR"><rect x="62" y="102" width="12" height="34" rx="5" fill="#2f2a2a"/><rect x="60" y="134" width="19" height="10" rx="3" fill="#3a2616"/></g>
+        <path d="M44 56 Q60 50 76 56 L80 98 L40 98Z" fill="#f0ead6"/>
+        <path d="M46 58 L57 58 L53 98 L42 98Z" fill="#8a5a33"/>
+        <path d="M74 58 L63 58 L67 98 L78 98Z" fill="#8a5a33"/>
+        <rect x="40" y="94" width="40" height="8" fill="#b3261e"/>
+        <path d="M76 98 L84 118 L78 120 L72 100Z" fill="#b3261e"/>
+        <g class="brazo bL"><rect x="32" y="56" width="9" height="30" rx="4.5" fill="#f0ead6"/><circle cx="36" cy="88" r="5" fill="#d7a27a"/></g>
+        <g class="brazo bR"><rect x="79" y="56" width="9" height="30" rx="4.5" fill="#f0ead6"/><circle cx="84" cy="88" r="5" fill="#d7a27a"/><path d="M84 88 L112 70" stroke="#d9dde2" stroke-width="3" stroke-linecap="round"/><path d="M84 88 L88 92" stroke="#8a6b2a" stroke-width="4" stroke-linecap="round"/></g>
+        <g stroke="#4a2f1a" stroke-width="2.6" stroke-linecap="round">
+          <path d="M46 42 L38 74"/><path d="M50 46 L45 78"/><path d="M74 46 L79 78"/><path d="M70 42 L82 72"/>
+        </g>
+        <g fill="#e0b84a"><circle cx="38" cy="74" r="2"/><circle cx="45" cy="78" r="2"/><circle cx="79" cy="78" r="2"/><circle cx="82" cy="72" r="2"/></g>
+        <circle cx="60" cy="42" r="15" fill="#d7a27a"/>
+        <path d="M43 36 Q60 28 77 36 L78 42 Q60 34 42 42Z" fill="#b3261e"/>
+        <path d="M26 34 L60 10 L94 34 L82 38 Q60 30 38 38Z" fill="#2b1d14" stroke="#c8a24a" stroke-width="2" stroke-linejoin="round"/>
+        <ellipse cx="54" cy="43" rx="4.6" ry="3.4" fill="#2b1d14"/><ellipse cx="66" cy="43" rx="4.6" ry="3.4" fill="#2b1d14"/>
+        <circle cx="55" cy="42" r="1.2" fill="#fff"/><circle cx="67" cy="42" r="1.2" fill="#fff"/>
+        <path d="M52 51 Q60 55 68 51" stroke="#2b1d14" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M58 54 L56 64 M62 54 L64 64" stroke="#4a2f1a" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="56" cy="64" r="1.8" fill="#e0b84a"/><circle cx="64" cy="64" r="1.8" fill="#e0b84a"/>
+      </g>
+    </svg>
+  </div>
+
+  <div id="cortina" aria-hidden="true"><i style="--k:0"></i><i style="--k:1"></i><i style="--k:2"></i><i style="--k:3"></i><i style="--k:4"></i><span id="cortinaTxt"></span></div>
+
+  <div id="archivoPanel" class="archivo-panel" aria-hidden="true"><div class="lienzo" id="lienzo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 560" role="img" aria-label="Collage surrealista y onírico con relojes, espejos, flores y escaleras imposibles"><defs><radialGradient id="bg" cx="50%" cy="38%" r="75%"><stop offset="0" stop-color="#244f56"/><stop offset=".55" stop-color="#12282d"/><stop offset="1" stop-color="#070909"/></radialGradient><radialGradient id="glw"><stop offset="0" stop-color="#ffe3a0" stop-opacity=".95"/><stop offset="1" stop-color="#ffe3a0" stop-opacity="0"/></radialGradient><symbol id="fl" viewBox="-12 -12 24 24" overflow="visible"><g><ellipse cx="0" cy="-7" rx="4.2" ry="6.2" transform="rotate(0)"/><ellipse cx="0" cy="-7" rx="4.2" ry="6.2" transform="rotate(72)"/><ellipse cx="0" cy="-7" rx="4.2" ry="6.2" transform="rotate(144)"/><ellipse cx="0" cy="-7" rx="4.2" ry="6.2" transform="rotate(216)"/><ellipse cx="0" cy="-7" rx="4.2" ry="6.2" transform="rotate(288)"/></g><circle r="3.2" fill="#2b1d14"/></symbol><clipPath id="esp"><ellipse cx="305" cy="300" rx="47" ry="63"/></clipPath></defs><rect width="400" height="560" fill="url(#bg)"/><polygon points="0,0 150,0 120,60 0,90" fill="#8a6a45" opacity="0.18"/><polygon points="250,0 400,0 400,110 300,70" fill="#8b9396" opacity="0.14"/><polygon points="0,400 90,380 170,560 0,560" fill="#b59660" opacity="0.12"/><polygon points="230,380 400,350 400,560 260,560" fill="#2c5b63" opacity="0.35"/><polygon points="140,170 260,150 280,230 160,250" fill="#8b9396" opacity="0.08"/><circle cx="200" cy="270" r="150" fill="none" stroke="#8a6a45" stroke-width=".8" stroke-dasharray="2 6" opacity=".5"/><path d="M305 300 C 250 220 130 230 105 108 C 200 40 330 480 300 450 C 200 500 80 420 100 460" fill="none" stroke="#8b9396" stroke-width="1" stroke-dasharray="3 4" opacity=".55"/><path d="M105 108 C 170 50 250 170 300 100 C 370 40 200 210 100 300 C 40 345 220 255 305 300 C 360 335 160 400 100 470 C 60 510 250 470 300 455" fill="none" stroke="#b3261e" stroke-width="1.1" opacity=".8"/><g transform="translate(105 108) skewX(-9) rotate(-5)"><path d="M-52 0 C-52 -40 -20 -50 0 -48 C 30 -50 54 -30 52 4 C50 28 40 38 26 40 C24 70 18 92 8 88 C2 84 6 56 4 44 C-20 48 -52 36 -52 0Z" fill="#b59660" stroke="#2b1d14" stroke-width="2.5"/><circle cx="0.0" cy="-36.0" r="3" fill="#b3261e"/><circle cx="19.0" cy="-31.7" r="2" fill="#2b1d14"/><circle cx="32.9" cy="-20.0" r="2" fill="#2b1d14"/><circle cx="38.0" cy="-4.0" r="2" fill="#2b1d14"/><circle cx="32.9" cy="12.0" r="2" fill="#2b1d14"/><circle cx="19.0" cy="23.7" r="2" fill="#2b1d14"/><circle cx="0.0" cy="28.0" r="2" fill="#2b1d14"/><circle cx="-19.0" cy="23.7" r="2" fill="#2b1d14"/><circle cx="-32.9" cy="12.0" r="2" fill="#2b1d14"/><circle cx="-38.0" cy="-4.0" r="2" fill="#2b1d14"/><circle cx="-32.9" cy="-20.0" r="2" fill="#2b1d14"/><circle cx="-19.0" cy="-31.7" r="2" fill="#2b1d14"/><line x1="0" y1="-4" x2="-12.0" y2="16.8" stroke="#2b1d14" stroke-width="5.5" stroke-linecap="round"/><line x1="0" y1="-4" x2="0" y2="-38" stroke="#2b1d14" stroke-width="2.4" stroke-linecap="round"/><circle cx="0" cy="-4" r="3" fill="#2b1d14"/></g><path d="M222 20 Q300 8 394 24" stroke="#8a6a45" stroke-width="3" fill="none"/><line x1="240" y1="18" x2="240" y2="72" stroke="#2b1d14" stroke-width="1"/><use href="#fl" x="227" y="69" width="26" height="26" fill="#c9b08a"/><line x1="272" y1="19" x2="272" y2="102" stroke="#2b1d14" stroke-width="1"/><use href="#fl" x="259" y="99" width="26" height="26" fill="#b59660"/><line x1="304" y1="18" x2="304" y2="62" stroke="#2b1d14" stroke-width="1"/><use href="#fl" x="291" y="59" width="26" height="26" fill="#c9b08a"/><line x1="336" y1="19" x2="336" y2="112" stroke="#2b1d14" stroke-width="1"/><use href="#fl" x="323" y="109" width="26" height="26" fill="#b59660"/><line x1="368" y1="18" x2="368" y2="82" stroke="#2b1d14" stroke-width="1"/><use href="#fl" x="355" y="79" width="26" height="26" fill="#c9b08a"/><use href="#fl" x="251" y="157" width="22" height="22" fill="#8b9396" opacity=".5"/><use href="#fl" x="341" y="139" width="22" height="22" fill="#8b9396" opacity=".5"/><rect x="30" y="345" width="22" height="18" fill="#8a6a45" stroke="#2b1d14" stroke-width="1.5"/><rect x="52" y="327" width="22" height="36" fill="#b59660" stroke="#2b1d14" stroke-width="1.5"/><rect x="74" y="309" width="22" height="54" fill="#8a6a45" stroke="#2b1d14" stroke-width="1.5"/><rect x="96" y="291" width="22" height="72" fill="#b59660" stroke="#2b1d14" stroke-width="1.5"/><rect x="118" y="273" width="22" height="90" fill="#8a6a45" stroke="#2b1d14" stroke-width="1.5"/><rect x="140" y="255" width="22" height="108" fill="#b59660" stroke="#2b1d14" stroke-width="1.5"/><rect x="166" y="215" width="20" height="40" rx="9" fill="#b3261e" stroke="#2b1d14" stroke-width="1.5"/><rect x="44" y="196" width="20" height="14" fill="none" stroke="#8b9396" stroke-dasharray="3 3" opacity=".7"/><rect x="64" y="182" width="20" height="28" fill="none" stroke="#8b9396" stroke-dasharray="3 3" opacity=".7"/><rect x="84" y="168" width="20" height="42" fill="none" stroke="#8b9396" stroke-dasharray="3 3" opacity=".7"/><path d="M225 262 a14 14 0 1 0 0 28 a10 12 0 1 1 0 -28Z" fill="#d9cdb0"/><rect x="221" y="318" width="8" height="26" fill="#d9cdb0"/><path d="M225 318 q4 -9 0 -14 q-4 5 0 14" fill="#e6a23c"/><ellipse cx="305" cy="300" rx="53" ry="69" fill="#2c5b63" stroke="#b59660" stroke-width="6"/><ellipse cx="305" cy="300" rx="53" ry="69" fill="none" stroke="#2b1d14" stroke-width="1.5"/><g clip-path="url(#esp)" opacity=".9"><rect x="250" y="230" width="110" height="140" fill="#0f2327"/><path d="M285 262 a14 14 0 1 1 0 28 a10 12 0 1 0 0 -28Z" fill="#a69b82"/><rect x="281" y="318" width="8" height="26" fill="#a69b82"/><path d="M285 318 q4 -9 0 -14 q-4 5 0 14" fill="#b87d2d"/><path d="M318 276 q10 -12 22 0 q-8 -3 -11 5 q-5 -8 -11 -5Z" fill="#cfc4aa"/><circle cx="329" cy="281" r="3" fill="#cfc4aa"/><circle cx="322" cy="334" r="6" fill="none" stroke="#cfc4aa" stroke-width="2.5"/><rect x="326" y="332" width="22" height="3.5" fill="#cfc4aa"/><rect x="340" y="335" width="3.5" height="7" fill="#cfc4aa"/></g><path d="M290 240 l8 20 l-6 12" stroke="#8b9396" stroke-width="1" fill="none" opacity=".6"/><polygon points="70.0,410.0 96.0,455.0 44.0,455.0" fill="#b3261e" fill-opacity=".75" stroke="#2b1d14" stroke-width="2"/><polygon points="169.0,440.0 157.0,460.8 133.0,460.8 121.0,440.0 133.0,419.2 157.0,419.2" fill="none" stroke="#8b9396" stroke-width="2"/><polygon points="79.0,525.0 45.0,525.0 45.0,491.0 79.0,491.0" fill="none" stroke="#8b9396" stroke-width="2"/><circle cx="135" cy="508" r="22" fill="none" stroke="#8b9396" stroke-width="2"/><polygon points="188.0,464.0 201.3,473.7 196.2,489.3 179.8,489.3 174.7,473.7" fill="none" stroke="#b59660" stroke-width="1.5"/><circle cx="225" cy="455" r="22" fill="url(#glw)"/><circle cx="225" cy="455" r="10" fill="#f1d28a" stroke="#f1d28a" stroke-width="1.5"/><rect x="220" y="465" width="10" height="9" fill="#8a6a45"/><circle cx="219" cy="484" r="2" fill="#b59660"/><circle cx="259" cy="455" r="10" fill="#142125" stroke="#8b9396" stroke-width="1.5"/><rect x="254" y="465" width="10" height="9" fill="#8a6a45"/><circle cx="253" cy="484" r="2" fill="#b59660"/><circle cx="259" cy="484" r="2" fill="#b59660"/><circle cx="293" cy="455" r="22" fill="url(#glw)"/><circle cx="293" cy="455" r="10" fill="#f1d28a" stroke="#f1d28a" stroke-width="1.5"/><rect x="288" y="465" width="10" height="9" fill="#8a6a45"/><circle cx="287" cy="484" r="2" fill="#b59660"/><circle cx="293" cy="484" r="2" fill="#b59660"/><circle cx="299" cy="484" r="2" fill="#b59660"/><circle cx="327" cy="455" r="10" fill="#142125" stroke="#8b9396" stroke-width="1.5"/><rect x="322" y="465" width="10" height="9" fill="#8a6a45"/><circle cx="321" cy="484" r="2" fill="#b59660"/><circle cx="327" cy="484" r="2" fill="#b59660"/><circle cx="333" cy="484" r="2" fill="#b59660"/><circle cx="321" cy="491" r="2" fill="#b59660"/><circle cx="361" cy="455" r="10" fill="#142125" stroke="#8b9396" stroke-width="1.5"/><rect x="356" y="465" width="10" height="9" fill="#8a6a45"/><circle cx="355" cy="484" r="2" fill="#b59660"/><circle cx="361" cy="484" r="2" fill="#b59660"/><circle cx="367" cy="484" r="2" fill="#b59660"/><circle cx="355" cy="491" r="2" fill="#b59660"/><circle cx="361" cy="491" r="2" fill="#b59660"/><g transform="translate(190 42)"><ellipse rx="22" ry="11" fill="#d9cdb0" stroke="#2b1d14"/><circle r="7" fill="#2c5b63"/><circle r="3" fill="#2b1d14"/></g><g transform="translate(378 226)" fill="none" stroke="#8b9396" stroke-width="1.5"><circle r="10"/><circle r="4"/><line x1="10.0" y1="0.0" x2="15.0" y2="0.0"/><line x1="7.0710678118654755" y1="7.071067811865475" x2="10.606601717798213" y2="10.606601717798211"/><line x1="6.123233995736766e-16" y1="10.0" x2="9.18485099360515e-16" y2="15.0"/><line x1="-7.071067811865475" y1="7.0710678118654755" x2="-10.606601717798211" y2="10.606601717798213"/><line x1="-10.0" y1="1.2246467991473533e-15" x2="-15.0" y2="1.83697019872103e-15"/><line x1="-7.071067811865477" y1="-7.071067811865475" x2="-10.606601717798215" y2="-10.606601717798211"/><line x1="-1.8369701987210296e-15" y1="-10.0" x2="-2.7554552980815444e-15" y2="-15.0"/><line x1="7.071067811865474" y1="-7.071067811865477" x2="10.60660171779821" y2="-10.606601717798215"/></g><path d="M30 238 q10 -14 18 0 q8 -14 18 0 q-10 12 -18 6 q-8 6 -18 -6Z" fill="#8b9396" opacity=".6"/><polygon points="340,505 372,495 372,527 340,537" fill="none" stroke="#b59660" opacity=".6"/><polygon points="352,490 384,480 372,495 340,505" fill="none" stroke="#b59660" opacity=".6"/><path d="M20 20 l6 0 m-3 -3 l0 6" stroke="#8b9396" stroke-width="1" opacity=".5"/><path d="M60 150 l6 0 m-3 -3 l0 6" stroke="#8b9396" stroke-width="1" opacity=".5"/><path d="M200 185 l6 0 m-3 -3 l0 6" stroke="#8b9396" stroke-width="1" opacity=".5"/><path d="M380 130 l6 0 m-3 -3 l0 6" stroke="#8b9396" stroke-width="1" opacity=".5"/><path d="M30 380 l6 0 m-3 -3 l0 6" stroke="#8b9396" stroke-width="1" opacity=".5"/><path d="M205 540 l6 0 m-3 -3 l0 6" stroke="#8b9396" stroke-width="1" opacity=".5"/><path d="M390 400 l6 0 m-3 -3 l0 6" stroke="#8b9396" stroke-width="1" opacity=".5"/><rect x="6" y="6" width="388" height="548" fill="none" stroke="#8a6a45" stroke-width="1.2" opacity=".7"/></svg></div></div>
+  <div id="apagon" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
